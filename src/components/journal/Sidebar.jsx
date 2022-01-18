@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { JournalEntries } from "./JournalEntries";
 
 export const Sidebar = () => {
@@ -10,6 +11,11 @@ export const Sidebar = () => {
           <span> Test</span>
         </h3>
         <button className="btn">Log out</button>
+
+        <Link to="/auth/login" className="temp-link">
+          temp-link
+          {/* BORRAR ESTE LINK, ESOLO PARA TEST*/}
+        </Link>
       </div>
       <div className="journal__new-entry">
         <i className="far fa-calendar-plus fa-5x"></i>
