@@ -2,6 +2,8 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth, db, googleAuthProvider } from "../firebase/firebase-conf";
 import { types } from "../types/types";
 
+console.log(db);
+
 export const startLoginEmailPassword = (email, password) => {
   return (dispatch) => {
     setTimeout(() => {
