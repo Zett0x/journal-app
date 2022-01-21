@@ -1,14 +1,53 @@
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth, db, googleAuthProvider } from "../firebase/firebase-conf";
 import { types } from "../types/types";
+import { removeError, setError, startLoading, finishLoading } from "./ui";
 
-console.log(db);
+export const login = (uid, displayName) => ({
+  type: types.login,
+  payload: { uid, displayName },
+});
 
 export const startLoginEmailPassword = (email, password) => {
   return (dispatch) => {
-    setTimeout(() => {
-      dispatch(login(123, "testStartLoginEmailPassmethod"));
-    }, 3500);
+    dispatch(startLoading());
+    signInWithEmailAndPassword(auth, email, password)
+      .then(({ user }) => {
+        const { uid, displayName } = user;
+        dispatch(login(uid, displayName));
+        dispatch(removeError()); //added temp
+      })
+      .catch((error) => {
+        console.log(error);
+        dispatch(setError(error.message)); // added temp
+      })
+      .finally(() => {
+        dispatch(finishLoading());
+      });
+  };
+};
+
+export const startRegisterWithEmailPasswordName = (email, password, name) => {
+  return (dispatch) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(({ user }) => {
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        }).then(() => {
+          const { uid, displayName } = user;
+          dispatch(login(uid, displayName));
+          dispatch(removeError()); //added temp
+        });
+      })
+      .catch((err) => {
+        dispatch(setError(err.message)); //added temp
+      });
   };
 };
 
@@ -20,6 +59,7 @@ export const startGoogleLogin = () => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         console.log(token);
+        console.log(result);
 
         // The signed-in user info.
         const user = result.user;
@@ -42,8 +82,3 @@ export const startGoogleLogin = () => {
       });
   };
 };
-
-export const login = (uid, displayName) => ({
-  type: types.login,
-  payload: { uid, displayName },
-});
