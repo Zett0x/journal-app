@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { startLoginEmailPassword } from "../../actions/auth";
 import { startGoogleLogin } from "../../actions/auth";
@@ -7,6 +7,7 @@ import { useForm } from "../../hooks/useForm";
 
 export const LoginScreen = () => {
   const dispatch = useDispatch();
+  const { loading, msgError } = useSelector((state) => state.ui);
   const [formValues, handleInputChange] = useForm({
     email: "test@gmail.com",
     password: "123456",
@@ -16,8 +17,9 @@ export const LoginScreen = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-
-    dispatch(startLoginEmailPassword(email, password));
+    if (!loading) {
+      dispatch(startLoginEmailPassword(email, password));
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -28,6 +30,9 @@ export const LoginScreen = () => {
     <>
       <h3 className="auth__title">Login</h3>
       <form onSubmit={handleLogin}>
+        {msgError !== null && (
+          <div className="auth__alert-error">{msgError}</div>
+        )}
         <input
           type="text"
           placeholder="Email"
@@ -47,7 +52,11 @@ export const LoginScreen = () => {
           onChange={handleInputChange}
           required={true}
         />
-        <button type="submit" className="btn btn-primary btn-block">
+        <button
+          type="submit"
+          className="btn btn-primary btn-block"
+          disabled={loading}
+        >
           Login
         </button>
 
