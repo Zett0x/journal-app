@@ -27,7 +27,6 @@ export const startLoginEmailPassword = (email, password) => {
         dispatch(removeError()); //added temp
       })
       .catch((error) => {
-        console.log(error);
         dispatch(setError(error.message)); // added temp
       })
       .finally(() => {
@@ -61,8 +60,6 @@ export const startGoogleLogin = () => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        console.log(token);
-        console.log(result);
 
         // The signed-in user info.
         const user = result.user;
