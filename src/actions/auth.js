@@ -7,6 +7,7 @@ import {
 import { auth, googleAuthProvider } from "../firebase/firebase-conf";
 import { types } from "../types/types";
 import { removeError, setError, startLoading, finishLoading } from "./ui";
+import Swal from "sweetalert2";
 
 export const login = (uid, displayName) => ({
   type: types.login,
@@ -26,7 +27,19 @@ export const startLoginEmailPassword = (email, password) => {
         dispatch(removeError()); //added temp
       })
       .catch((error) => {
-        dispatch(setError(error.message)); // added temp
+        const customErrorStringTemp = error.message
+          .trim()
+          .replace("Firebase: Error (auth/", "")
+          .replaceAll("-", " ")
+          .replace(")", "")
+          .replace("Firebase:", "");
+
+        const customErrorString =
+          customErrorStringTemp.charAt(0).toUpperCase() +
+          customErrorStringTemp.slice(1);
+
+        dispatch(setError(customErrorString)); // added temp
+        Swal.fire("Error", customErrorString, "error");
       })
       .finally(() => {
         dispatch(finishLoading());
@@ -46,8 +59,18 @@ export const startRegisterWithEmailPasswordName = (email, password, name) => {
           dispatch(removeError()); //added temp
         });
       })
-      .catch((err) => {
-        dispatch(setError(err.message)); //added temp
+      .catch((error) => {
+        const customErrorStringTemp = error.message
+          .trim()
+          .replace("Firebase: Error (auth/", "")
+          .replaceAll("-", " ")
+          .replace(")", "")
+          .replace("Firebase:", "");
+        const customErrorString =
+          customErrorStringTemp.charAt(0).toUpperCase() +
+          customErrorStringTemp.slice(1);
+        dispatch(setError(customErrorString)); // added temp
+        Swal.fire("Error", customErrorString, "error");
       });
   };
 };
