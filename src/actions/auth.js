@@ -5,13 +5,16 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, db, googleAuthProvider } from "../firebase/firebase-conf";
+import { auth, googleAuthProvider } from "../firebase/firebase-conf";
 import { types } from "../types/types";
 import { removeError, setError, startLoading, finishLoading } from "./ui";
 
 export const login = (uid, displayName) => ({
   type: types.login,
   payload: { uid, displayName },
+});
+export const logout = () => ({
+  type: types.logout,
 });
 
 export const startLoginEmailPassword = (email, password) => {
@@ -80,5 +83,12 @@ export const startGoogleLogin = () => {
         // const credential = GoogleAuthProvider.credentialFromError(error);
         // ..
       });
+  };
+};
+
+export const startLogOut = () => {
+  return async (dispatch) => {
+    await auth.signOut();
+    dispatch(logout());
   };
 };
