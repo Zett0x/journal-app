@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "../../hooks/useForm";
 import validator from "validator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { removeError, setError } from "../../actions/ui";
 import { startRegisterWithEmailPasswordName } from "../../actions/auth";
 import Swal from "sweetalert2";
@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 */
 export const RegisterScreen = () => {
   const dispatch = useDispatch();
-  const { msgError } = useSelector((state) => state.ui);
+  //const { msgError } = useSelector((state) => state.ui);
 
   const [formValues, handleInputChange] = useForm({
     name: "test",
@@ -28,30 +28,39 @@ export const RegisterScreen = () => {
 
   const { name, email, password, password2 } = formValues;
   const isFormValid = () => {
+    let msg;
     if (name.trim().length === 0) {
       dispatch(setError("Name is required"));
+      msg = "Name is required";
 
       return false;
     } else if (!validator.isEmail(email)) {
       dispatch(setError("Email is not valid"));
+
       return false;
     } else if (password !== password2) {
       dispatch(setError("Las contraseñas no coinciden"));
+      msg = "Passwords don't match";
+      Swal.fire("Error", msg, "error");
+
       return false;
     } else if (password.length < 6) {
       dispatch(setError("Password should have at least 6 characters!"));
+      msg = "Password should have at least 6 characters!";
+      Swal.fire("Error", msg, "error");
       return false;
     }
 
     dispatch(removeError());
     return true;
   };
+
   const handleRegister = (e) => {
     e.preventDefault();
-    //console.log(name, email, password, password2);
+
     if (isFormValid()) {
       dispatch(startRegisterWithEmailPasswordName(email, password, name));
-    } else Swal.fire("Error", msgError, "error");
+    }
   };
 
   return (

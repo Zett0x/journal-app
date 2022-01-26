@@ -6,7 +6,7 @@ import {
 } from "firebase/auth";
 import { auth, googleAuthProvider } from "../firebase/firebase-conf";
 import { types } from "../types/types";
-import { removeError, setError, startLoading, finishLoading } from "./ui";
+import { removeError, startLoading, finishLoading } from "./ui";
 import Swal from "sweetalert2";
 
 export const login = (uid, displayName) => ({
@@ -24,7 +24,6 @@ export const startLoginEmailPassword = (email, password) => {
       .then(({ user }) => {
         const { uid, displayName } = user;
         dispatch(login(uid, displayName));
-        dispatch(removeError()); //added temp
       })
       .catch((error) => {
         const customErrorStringTemp = error.message
@@ -38,7 +37,6 @@ export const startLoginEmailPassword = (email, password) => {
           customErrorStringTemp.charAt(0).toUpperCase() +
           customErrorStringTemp.slice(1);
 
-        dispatch(setError(customErrorString)); // added temp
         Swal.fire("Error", customErrorString, "error");
       })
       .finally(() => {
@@ -64,12 +62,11 @@ export const startRegisterWithEmailPasswordName = (email, password, name) => {
           .trim()
           .replace("Firebase: Error (auth/", "")
           .replaceAll("-", " ")
-          .replace(")", "")
+          .replaceAll(")", "")
           .replace("Firebase:", "");
         const customErrorString =
           customErrorStringTemp.charAt(0).toUpperCase() +
           customErrorStringTemp.slice(1);
-        dispatch(setError(customErrorString)); // added temp
         Swal.fire("Error", customErrorString, "error");
       });
   };
