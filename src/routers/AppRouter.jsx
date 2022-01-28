@@ -9,6 +9,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { login } from "../actions/auth";
+import { startLoadingNotes } from "../actions/notes";
+
 import { JournalScreen } from "../components/journal/JournalScreen";
 import { LoadingScreen } from "../components/loading/LoadingScreen";
 
@@ -19,19 +21,17 @@ import { PublicRoute } from "./PublicRoute";
 export const AppRouter = () => {
   const dispatch = useDispatch();
   const [checking, setChecking] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    getAuth().onAuthStateChanged((user) => {
+    getAuth().onAuthStateChanged(async (user) => {
       if (user?.uid) {
         dispatch(login(user.uid, user.displayName));
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
+
+        dispatch(startLoadingNotes(user.uid));
       }
       setChecking(false);
     });
-  }, [dispatch, checking, isLoggedIn]);
+  }, [dispatch]);
 
   if (checking) {
     return <LoadingScreen />;
