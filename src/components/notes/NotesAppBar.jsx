@@ -26,6 +26,7 @@ export const NotesAppBar = () => {
       <input
         id="fileSelector"
         type="file"
+        accept="image/*"
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
