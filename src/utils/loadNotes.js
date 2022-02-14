@@ -12,5 +12,6 @@ export const loadNotes = async (uid) => {
       ...snapSon.data(),
     });
   });
+
   return notes;
 };
