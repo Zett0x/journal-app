@@ -4,6 +4,7 @@ import { loadNotes } from "../utils/loadNotes";
 
 import Swal from "sweetalert2";
 import { fileUpload } from "../utils/fileUpload";
+
 export const activeNote = (id, note) => ({
   type: types.notesActive,
   payload: {
@@ -16,7 +17,7 @@ export const startNewNote = () => {
   return async (dispatch, getState) => {
     const { uid } = getState().auth;
     const newNote = {
-      title: "test",
+      title: "",
       body: "",
       date: new Date().getTime(),
     };
@@ -45,6 +46,7 @@ const setNotes = (notes) => ({
 export const startSaveNote = (note) => {
   return async (dispatch, getState) => {
     const { uid } = getState().auth;
+    const { notes } = getState().notes;
 
     if (!note.imgUrl) {
       delete note.imgUrl;
@@ -56,7 +58,13 @@ export const startSaveNote = (note) => {
       doc(db, `${uid}/journal/notes/`, `${note.id}`),
       noteToFirestore
     );
+
+    if (!notes.some((r) => r.id === note.id)) {
+      dispatch(setNotes([...notes, note]));
+    }
+
     dispatch(refreshNote(note.id, noteToFirestore));
+
     Swal.fire("Saved", note.title, "success");
   };
 };
