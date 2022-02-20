@@ -8,6 +8,7 @@ import {
   getDocs,
   setDoc,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore/lite";
 import { GoogleAuthProvider } from "firebase/auth";
 
@@ -33,5 +34,6 @@ export {
   addDoc,
   setDoc,
   doc,
+  deleteDoc,
   googleAuthProvider,
 };
