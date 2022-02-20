@@ -42,6 +42,7 @@ export const NoteScreen = () => {
           value={title}
           name="title"
           onChange={handleInputChange}
+          required
         />
         <textarea
           placeholder="What happened today?"
