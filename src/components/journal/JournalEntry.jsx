@@ -19,7 +19,10 @@ export const JournalEntry = ({ id, date, title, body, imgUrl }) => {
   };
 
   return (
-    <div className="journal__entry" onClick={handleClickNote}>
+    <div
+      className="journal__entry animate__animated animate__fadeIn animate__faster"
+      onClick={handleClickNote}
+    >
       {imgUrl && (
         <div
           className="journal__entry-picture"
