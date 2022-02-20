@@ -30,9 +30,6 @@ export const LoginScreen = () => {
     <>
       <h3 className="auth__title">Login</h3>
       <form onSubmit={handleLogin}>
-        {/* {msgError !== null && (
-          <div className="auth__alert-error">{msgError}</div>
-        )} */}
         <input
           type="text"
           placeholder="Email"
