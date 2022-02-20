@@ -1,5 +1,12 @@
 import { types } from "../types/types";
-import { db, addDoc, collection, setDoc, doc } from "../firebase/firebase-conf";
+import {
+  db,
+  addDoc,
+  collection,
+  setDoc,
+  doc,
+  deleteDoc,
+} from "../firebase/firebase-conf";
 import { loadNotes } from "../utils/loadNotes";
 
 import Swal from "sweetalert2";
@@ -98,5 +105,22 @@ export const startUploading = (file) => {
     activeNote.imgUrl = fileUrl;
     dispatch(startSaveNote(activeNote));
     Swal.close();
+  };
+};
+
+export const notesDelete = (id) => ({
+  type: types.notesDelete,
+  payload: id,
+});
+
+export const startDeleting = (noteId) => {
+  return async (dispatch, getState) => {
+    const { uid } = getState().auth;
+    const { title: noteTitle } = getState().notes.active;
+
+    await deleteDoc(doc(db, `${uid}/journal/notes/`, `${noteId}`));
+    dispatch(notesDelete(noteId));
+
+    Swal.fire("Deleted", noteTitle, "success");
   };
 };
