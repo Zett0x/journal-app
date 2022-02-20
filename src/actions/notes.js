@@ -124,3 +124,5 @@ export const startDeleting = (noteId) => {
     Swal.fire("Deleted", noteTitle, "success");
   };
 };
+
+export const notesLogout = () => ({ type: types.notesLogoutCleaning });
